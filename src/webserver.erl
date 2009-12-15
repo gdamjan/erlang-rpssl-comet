@@ -28,22 +28,30 @@ dispatch_requests(Req) ->
     end.
 
 
-
-%% Home page.. click to create a new game
+%% Home page (/): just serve a static file
 handle('GET', [], Req) ->
     {ok, File} = file:open("static/index.html", read),
     Req:respond({200, [{"Content-Type", "text/html"}], {file, File}});
 
 handle('POST', [], Req) ->
     %% create a uuid, and redirect to it
-    Location = "http://" ++ Req:get_header_value("host") ++ "/" ++ uuid:to_string(uuid:v4()),
+    Location = "http://" ++ Req:get_header_value("host") ++ "/" ++ uuid:to_string(uuid:v4()) ++ "/",
     Req:respond({302, [{"Location", Location }], "Redirecting to " ++ Location});
 
-%% Game page (/some-uuid), HTML + JS
-%% Very simple templating, just replace ${UUID} with the UUID
+%% Game page (/some-uuid/): serve a simple HTML/JS page with the UI
 handle('GET', [UUID], Req) ->
-    {ok, Bin} = file:read_file("static/game.html"),
-    Req:ok({"text/html", re:replace(Bin, "\\${UUID}", UUID)});
+    % make sure the URL ends with a slash ("/")
+    % if not, redirect to the same URL with / appended
+    case string:right(Req:get(path), 1) of
+        "/" ->
+            {ok, File} = file:open("static/game.html", read),
+            Req:respond({200, [{"Content-Type", "text/html"}], {file, File}});
+        _ ->
+            Location = "http://" ++ Req:get_header_value("host") ++ "/" ++ UUID ++ "/",
+            Req:respond({302, [{"Location", Location }], "Redirecting to " ++ Location})
+    end;
+
+
 
 %% Comet callback from the page POST to /some-uuid
 handle('POST', [Uuid], Req) ->
