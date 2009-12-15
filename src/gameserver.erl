@@ -16,27 +16,31 @@ start_link() ->
 
 
 play(GameUUID, Attack) ->
-    gen_server:cast(?SERVER, {play, self(), GameUUID, Attack}).
- 
+    gen_server:call(?SERVER, {play, GameUUID, Attack}, infinity).
+
+
 %% gen_server callbacks
 init([]) ->
     {ok, dict:new()}.
 
-handle_cast({play, Pid, GameUUID, Attack}, State) ->
-    io:format("play: ~p ~p ~p~n", [Pid, GameUUID, Attack]),
+handle_call({play, GameUUID, Attack}, From, State) ->
+    io:format("play: ~p ~p~n", [GameUUID, Attack]),
+
     case dict:is_key(GameUUID, State) of
-        true ->
-            {PrevPid, PrevAttack} = dict:fetch(GameUUID, State),
-            {R1, R2} = rpssl:play(PrevAttack, Attack),
-            Pid ! {result, R2, GameUUID, Attack, PrevAttack},
-            PrevPid ! {result, R1, GameUUID, PrevAttack, Attack},
-            {noreply, dict:erase(GameUUID, State)};
+        % first player attacks, don't reply just save his hand
         false ->
-            {noreply, dict:store(GameUUID, {Pid, Attack}, State)}
+            {noreply, dict:store(GameUUID, {From, Attack}, State)};
+        % second player attacks, play the game, reply to both
+        true ->
+            {OtherFrom, OtherAttack} = dict:fetch(GameUUID, State),
+            {R1, R2} = rpssl:play(OtherAttack, Attack),
+            gen_server:reply(OtherFrom, {R1, GameUUID, OtherAttack, Attack}),
+            Result = {R2, GameUUID, Attack, OtherAttack},
+            {reply, Result, dict:erase(GameUUID, State)}
     end.
 
 
-handle_call(_Msg, _From, State) -> {noreply, State}.
+handle_cast(_Msg, State) -> {noreply, State}.
 handle_info(_Info, State) -> {noreply, State}.
 terminate(_Reason, _State) -> ok.
 code_change(_OldVsn, State, _Extra) -> {ok, State}.

@@ -52,25 +52,16 @@ handle('GET', [UUID], Req) ->
     end;
 
 
-
-%% Comet callback from the page POST to /some-uuid
-handle('POST', [Uuid], Req) ->
-    %% it will play a hand for the user and wait 
-    %% when the other user plays his hand too, the gameserver will notify both
-    %% including the results of the game
-    %% Request is a POST of: attack=rock/paper/scissors/spock/lizard
-    %% Response is JSON of:
-    %%  {"result":"win/draw/lose","game":"uuid","attack":"paper","opponent":"paper"}
+%% Comet callback: play a hand and wait for the other players hand
+%% POST /<game-uuid>/attack (data: attack=rock)
+handle('POST', [Uuid, "attack"], Req) ->
     Data = mochiweb_util:parse_qs(Req:recv_body()),
     Attack = proplists:get_value("attack", Data),
-    gameserver:play(Uuid, Attack),
-    receive
-        {result, Result, Game, Attack, Opponent} ->
-            JSON = iolist_to_binary(mochijson2:encode({struct, [
-                {"result", Result},
-                {"game", list_to_binary(Game)},
-                {"attack", list_to_binary(Attack)},
-                {"opponent", list_to_binary(Opponent)}
-            ]})),
-            Req:ok({"application/javascript", JSON})
-    end.
+    {Result, Game, MyAttack, TheirAttack} = gameserver:play(Uuid, Attack),
+    JSON = iolist_to_binary(mochijson2:encode({struct, [
+        {"result", Result},
+        {"game", list_to_binary(Game)},
+        {"my-attack", list_to_binary(MyAttack)},
+        {"their-attack", list_to_binary(TheirAttack)}
+    ]})),
+    Req:ok({"application/javascript", JSON}).
