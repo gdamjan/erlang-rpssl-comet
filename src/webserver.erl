@@ -52,6 +52,18 @@ handle('GET', [UUID], Req) ->
     end;
 
 
+%% Comet callback: join a game and wait for the other player
+%% POST /<game-uuid>/join (data: name=AgentX)
+handle('POST', [Uuid, "join"], Req) ->
+    Data = mochiweb_util:parse_qs(Req:recv_body()),
+    Name = proplists:get_value("name", Data),
+    {Game, Opponent} = gameserver:join(Name, Uuid),
+    JSON = iolist_to_binary(mochijson2:encode({struct, [
+        {"game", list_to_binary(Game)},
+        {"opponent", list_to_binary(Opponent)}
+    ]})),
+    Req:ok({"application/javascript", JSON});
+
 %% Comet callback: play a hand and wait for the other players hand
 %% POST /<game-uuid>/attack (data: attack=rock)
 handle('POST', [Uuid, "attack"], Req) ->

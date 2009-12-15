@@ -2,7 +2,7 @@
 -behaviour(gen_server).
 
 %% API
--export([start_link/0, play/2]).
+-export([start_link/0, play/2, join/2]).
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
@@ -15,6 +15,9 @@ start_link() ->
     gen_server:start_link({local, ?SERVER}, ?MODULE, [], []).
 
 
+join(Name, GameUUID) ->
+    gen_server:call(?SERVER, {join, Name, GameUUID}, infinity).
+
 play(GameUUID, Attack) ->
     gen_server:call(?SERVER, {play, GameUUID, Attack}, infinity).
 
@@ -22,6 +25,9 @@ play(GameUUID, Attack) ->
 %% gen_server callbacks
 init([]) ->
     {ok, dict:new()}.
+
+handle_call({join, _Name, _GameUUID}, _From, State) ->
+    {noreply, State};
 
 handle_call({play, GameUUID, Attack}, From, State) ->
     io:format("play: ~p ~p~n", [GameUUID, Attack]),
