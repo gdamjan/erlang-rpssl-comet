@@ -2,12 +2,35 @@
 <head>
 <title>Rock-Paper-Scissors-Spock-Lizard</title>
 <script type="text/javascript" src="../static/jquery.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+    $("#commands a.play").each(function (i) {
+        $(this).click(function (ev) { 
+            ev.preventDefault();
+            $.post("attack", {'attack': $(this).html()}, function (data) {
+                $("#results").append("<li>Outcome: " + data['result'] +
+                    " You: " + data['my-attack'] + 
+                    " They: " + data['their-attack'] + "</li>");
+            }, "json");
+        });
+    });
+});
+</script>
 <style>
 body {text-align: center}
 </style>
 </head>
 <body>
 <h1>Rock-Paper-Scissors-Spock-Lizard</h1>
-$.post("attack", {'attack':'rock'})
+Copy the url of this <a href="">page</a> and sent it to a friend!
+<ol id=results></ol>
+<div id=commands>
+Play: 
+<a href="#" class=play>rock</a> 
+<a href="#" class=play>paper</a> 
+<a href="#" class=play>scissors</a> 
+<a href="#" class=play>spock</a> 
+<a href="#" class=play>lizard</a> 
+</div>
 </body>
 </html>
