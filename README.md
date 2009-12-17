@@ -42,3 +42,6 @@ two separate terminals:
 
 You will notice how the first one blocks until the second one plays, and then
 both are immediately released.
+
+
+The code is MIT licensed.
