@@ -5,11 +5,11 @@
 <script type="text/javascript">
 $(document).ready(function() {
     $("#commands a.play").each(function (i) {
-        $(this).click(function (ev) { 
+        $(this).click(function (ev) {
             ev.preventDefault();
             $.post("attack", {'attack': $(this).html()}, function (data) {
                 $("#results").append("<li>Outcome: " + data['result'] +
-                    " You: " + data['my-attack'] + 
+                    " You: " + data['your-attack'] +
                     " They: " + data['their-attack'] + "</li>");
             }, "json");
         });
@@ -17,20 +17,27 @@ $(document).ready(function() {
 });
 </script>
 <style>
-body {text-align: center}
+body {text-align:left}
+#help {width:350px; position:fixed; right:0.3em; top:0.3em}
 </style>
 </head>
 <body>
+<div id=help><img src="../static/rpssl.png">
+Scissors cut Paper covers Rock
+crushes Lizard poisons Spock smashes Scissors
+decapitates Lizard eats Paper disproves Spock
+vaporizes Rock crushes Scissors
+</div>
 <h1>Rock-Paper-Scissors-Spock-Lizard</h1>
 Copy the url of this <a href="">page</a> and sent it to a friend!
 <ol id=results></ol>
 <div id=commands>
-Play: 
-<a href="#" class=play>rock</a> 
-<a href="#" class=play>paper</a> 
-<a href="#" class=play>scissors</a> 
-<a href="#" class=play>spock</a> 
-<a href="#" class=play>lizard</a> 
+Play:
+<a href="#" class=play>rock</a>
+<a href="#" class=play>paper</a>
+<a href="#" class=play>scissors</a>
+<a href="#" class=play>spock</a>
+<a href="#" class=play>lizard</a>
 </div>
 </body>
 </html>
