@@ -10,8 +10,8 @@ start(Args) ->
                         {loop, fun dispatch_requests/1}]).
 
 
-%% This is called for each HTTP request in a new Erlang process
-%% Req will be a parameterized module holding the state (like an object)
+%% Mochiweb callback, called for each request in a separate process
+%% Req is an Erlang "parameterized module" (holds the state of the Request)
 dispatch_requests(Req) ->
     Path = string:tokens(Req:get(path), "/"),
     case Path of
@@ -69,11 +69,11 @@ handle('POST', [Uuid, "join"], Req) ->
 handle('POST', [Uuid, "attack"], Req) ->
     Data = mochiweb_util:parse_qs(Req:recv_body()),
     Attack = proplists:get_value("attack", Data),
-    {Result, Game, MyAttack, TheirAttack} = gameserver:play(Uuid, Attack),
+    {Result, Game, Attack1, Attack2} = gameserver:play(Uuid, Attack),
     JSON = iolist_to_binary(mochijson2:encode({struct, [
         {"result", Result},
         {"game", list_to_binary(Game)},
-        {"my-attack", list_to_binary(MyAttack)},
-        {"their-attack", list_to_binary(TheirAttack)}
+        {"your-attack", list_to_binary(Attack1)},
+        {"their-attack", list_to_binary(Attack2)}
     ]})),
     Req:ok({"application/javascript", JSON}).
