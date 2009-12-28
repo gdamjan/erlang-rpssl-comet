@@ -1,0 +1,3 @@
+[submodule "lib/mochiweb"]
+	path = lib/mochiweb
+	url = git://github.com/tswicegood/mochiweb.git

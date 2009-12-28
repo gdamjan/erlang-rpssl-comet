@@ -19,12 +19,11 @@ Mochiweb
 ========
 
 Comet-RPSSL uses mochiweb as a http server. If you don't already have it
-installed in the Erlang library path, you will need to download it and
-compile it:
+installed in the Erlang library path, you can use the git submodule:
 
-    mkdir lib ; cd lib
-    svn checkout http://mochiweb.googlecode.com/svn/trunk/ mochiweb
-    cd mochiweb
+    git submodule init
+    git submodule update
+    cd lib/mochiweb
     make
     cd ../..
 
