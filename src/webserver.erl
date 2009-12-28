@@ -16,7 +16,7 @@ dispatch_requests(Req) ->
     Path = string:tokens(Req:get(path), "/"),
     case Path of
         ["static" | File] ->
-            Req:serve_file(string:join(File, "/"), "./static");
+            Req:serve_file(File, "./static");
         _ ->
             Method = Req:get(method),
             case (catch handle(Method, Path, Req)) of
@@ -30,8 +30,7 @@ dispatch_requests(Req) ->
 
 %% Home page (/): just serve a static file
 handle('GET', [], Req) ->
-    {ok, File} = file:open("static/index.html", read),
-    Req:respond({200, [{"Content-Type", "text/html"}], {file, File}});
+    Req:serve_file("index.html", "./static");
 
 handle('POST', [], Req) ->
     %% create a uuid, and redirect to it
@@ -44,8 +43,7 @@ handle('GET', [UUID], Req) ->
     % if not, redirect to the same URL with / appended
     case string:right(Req:get(path), 1) of
         "/" ->
-            {ok, File} = file:open("static/game.html", read),
-            Req:respond({200, [{"Content-Type", "text/html"}], {file, File}});
+            Req:serve_file("game.html", "./static");
         _ ->
             Location = "http://" ++ Req:get_header_value("host") ++ "/" ++ UUID ++ "/",
             Req:respond({302, [{"Location", Location }], "Redirecting to " ++ Location})
