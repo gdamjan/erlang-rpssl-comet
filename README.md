@@ -23,9 +23,7 @@ installed in the Erlang library path, you can use the git submodule:
 
     git submodule init
     git submodule update
-    cd lib/mochiweb
-    make
-    cd ../..
+    make mochiweb
 
 Now you can compile and run Comet-RPSSL:
 
