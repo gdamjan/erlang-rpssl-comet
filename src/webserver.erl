@@ -30,7 +30,7 @@ dispatch_requests(Req) ->
 
 %% Home page (/): just serve a static file
 handle('GET', [], Req) ->
-    Req:serve_file("index.html", "./static");
+    Req:serve_file("main.html", "./static");
 
 handle('POST', [], Req) ->
     %% create a uuid, and redirect to it
