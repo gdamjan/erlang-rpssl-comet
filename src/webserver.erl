@@ -34,8 +34,8 @@ handle('GET', [], Req) ->
 
 handle('POST', [], Req) ->
     %% create a uuid, and redirect to it
-    Location = "http://" ++ Req:get_header_value("host") ++ "/" ++ uuid:to_string(uuid:v4()) ++ "/",
-    Req:respond({302, [{"Location", Location }], "Redirecting to " ++ Location});
+    UUID = uuid:to_string(uuid:v4()),
+    redirect(Req, UUID ++ "/");
 
 %% Game page (/some-uuid/): serve a simple HTML/JS page with the UI
 handle('GET', [UUID], Req) ->
@@ -45,8 +45,7 @@ handle('GET', [UUID], Req) ->
         "/" ->
             Req:serve_file("game.html", "./static");
         _ ->
-            Location = "http://" ++ Req:get_header_value("host") ++ "/" ++ UUID ++ "/",
-            Req:respond({302, [{"Location", Location }], "Redirecting to " ++ Location})
+            redirect(Req, UUID ++ "/")
     end;
 
 
@@ -75,3 +74,7 @@ handle('POST', [Uuid, "attack"], Req) ->
         {"their-attack", list_to_binary(Attack2)}
     ]})),
     Req:ok({"application/javascript", JSON}).
+
+redirect(Req, Path) ->
+    Location = "http://" ++ Req:get_header_value("host") ++ "/" ++ Path,
+    Req:respond({302, [{"Location", Location }], "Redirecting to " ++ Path ++ "\n"}).
