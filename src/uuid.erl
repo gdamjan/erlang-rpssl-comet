@@ -1,7 +1,39 @@
 % from http://stackoverflow.com/questions/1657204/erlang-uuid-generator
 -module(uuid).
--export([v4/0, to_string/1, get_parts/1]).
+-behaviour(gen_server).
 -import(random).
+
+%% API
+-export([start_link/0, generate/0]).
+
+%% gen_server callbacks
+-export([init/1, handle_call/3, handle_cast/2, handle_info/2,
+         terminate/2, code_change/3]).
+
+-define(SERVER, ?MODULE).
+
+
+start_link() ->
+    gen_server:start_link({local, ?SERVER}, ?MODULE, [], []).
+
+generate() ->
+    gen_server:call(?SERVER, generate).
+
+init([]) -> 
+    random:seed(now()),
+    {ok, []}.
+
+handle_call(generate, _From, State) ->
+    UUID = to_string(v4()),
+    {reply, UUID, State}.
+
+handle_cast(_Msg, State) -> {noreply, State}.
+handle_info(_Info, State) -> {noreply, State}.
+terminate(_Reason, _State) -> ok.
+code_change(_OldVsn, State, _Extra) -> {ok, State}.
+
+
+
 
 v4() ->
     v4(random:uniform(16#FFFFFFFFFFFF), random:uniform(16#FFF), 

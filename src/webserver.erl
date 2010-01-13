@@ -6,6 +6,7 @@ start(Args) ->
     [Port] = Args,
     io:format("Starting mochiweb on http://localhost:~p~n", [Port]),
     gameserver:start_link(),
+    uuid:start_link(),
     mochiweb_http:start([ {port, Port},
                         {loop, fun dispatch_requests/1}]).
 
@@ -34,7 +35,7 @@ handle('GET', [], Req) ->
 
 handle('POST', [], Req) ->
     %% create a uuid, and redirect to it
-    UUID = uuid:to_string(uuid:v4()),
+    UUID = uuid:generate(),
     redirect(Req, UUID ++ "/");
 
 %% Game page (/some-uuid/): serve a simple HTML/JS page with the UI
