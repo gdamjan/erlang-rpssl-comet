@@ -1,12 +1,14 @@
+<!DOCTYPE html>
 <html>
 <head>
+<meta charset="utf-8" />
 <title>Rock-Paper-Scissors-Spock-Lizard</title>
+<link rel="stylesheet" href="../static/style.css" />
 <script type="text/javascript" src="../static/jquery.js"></script>
 <script type="text/javascript">
-
 function click_handler(ev) {
     ev.preventDefault();
-    $("div#curtain").css("z-index", 99).fadeTo(1000, 0.4);
+    $("div#curtain").css("z-index", 99).fadeTo(400, 0.51);
     $.post("attack", {'attack': $(this).attr("id")}, got_result, "json");
 }
 
@@ -25,24 +27,15 @@ $(document).ready(function() {
     });
 });
 </script>
-<style>
-body {text-align:left}
-#sidebar {width:350px; position:fixed; right:0.3em; top:0.3em}
-#command_bar { border-top: 1px solid #666; margin-top: 1em; padding-top: 0.3em;}
-#curtain { position: fixed; z-index: -1; left: 0; top: 0; 
-    width: 100%; height: 100%; 
-    background: #004; opacity: 0; }
-
-</style>
 </head>
 <body>
 <div id=curtain></div>
 <div id=sidebar><img src="../static/rpssl.png">
-<span id=help>Scissors cut Paper covers Rock
-crushes Lizard poisons Spock smashes Scissors
-decapitates Lizard eats Paper disproves Spock
-vaporizes Rock crushes Scissors</span>
-<div id=command_bar>
+ <span id=help>Scissors cut Paper covers Rock
+ crushes Lizard poisons Spock smashes Scissors
+ decapitates Lizard eats Paper disproves Spock
+ vaporizes Rock crushes Scissors</span>
+ <div id=command_bar>
   <div id=commands>
   Play:
   <a href="" class=play id=rock>rock</a>
@@ -51,10 +44,16 @@ vaporizes Rock crushes Scissors</span>
   <a href="" class=play id=spock>spock</a>
   <a href="" class=play id=lizard>lizard</a>
   </div>
+ </div>
 </div>
+<div id="container">
+ <h1>Rock-Paper-Scissors-Spock-Lizard</h1>
+ Copy the url of this <a href="">page</a> and send it to a friend!
+ <ol id=results></ol>
+ <div id="footer-spacer"></div>   
 </div>
-<h1>Rock-Paper-Scissors-Spock-Lizard</h1>
-Copy the url of this <a href="">page</a> and send it to a friend!
-<ol id=results></ol>
+<div id="footer">
+ <a href="http://github.com/gdamjan/erlang-rpssl-comet">http://github.com/gdamjan/erlang-rpssl-comet</a>
+</div>
 </body>
 </html>

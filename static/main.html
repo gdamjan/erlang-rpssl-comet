@@ -1,25 +1,30 @@
+<!DOCTYPE html>
 <html>
 <head>
+<meta charset="utf-8" />
 <title>Rock-Paper-Scissors-Spock-Lizard</title>
-<style>
-body {text-align: left}
-#help {width:350px; position:fixed; right:0.3em; top:0.3em}
-</style>
+<link rel="stylesheet" href="static/style.css" />
 </head>
 <body>
-<div id=help><img src="static/rpssl.png">
-Scissors cut Paper covers Rock
-crushes Lizard poisons Spock smashes Scissors
-decapitates Lizard eats Paper disproves Spock
-vaporizes Rock crushes Scissors
+<div id=sidebar><img src="static/rpssl.png">
+ <span id=help>Scissors cut Paper covers Rock
+ crushes Lizard poisons Spock smashes Scissors
+ decapitates Lizard eats Paper disproves Spock
+ vaporizes Rock crushes Scissors</span>
 </div>
-<h1>Rock-Paper-Scissors-Spock-Lizard</h1>
-<form method=post>
+<div id="container">
+ <h1>Rock-Paper-Scissors-Spock-Lizard</h1>
+ <form method=post>
 <!--  
   <label for="name">Your name:</label>
   <input type=text id=name name=name value=""><br>
 -->
   <input type=submit value="Create a new game!">
-</form>
+ </form>
+ <div id="footer-spacer"></div>
+</div>
+<div id="footer">
+ <a href="http://github.com/gdamjan/erlang-rpssl-comet">http://github.com/gdamjan/erlang-rpssl-comet</a>
+</div>
 </body>
 </html>
