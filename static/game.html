@@ -6,6 +6,8 @@
 <link rel="stylesheet" href="../static/style.css" />
 <script type="text/javascript" src="../static/jquery.js"></script>
 <script type="text/javascript">
+jQuery(function($) { // start of jQuery() block
+
 function click_handler(ev) {
     ev.preventDefault();
     $("div#curtain").css("z-index", 99).fadeTo(400, 0.51);
@@ -15,17 +17,24 @@ function click_handler(ev) {
 function got_result(data) {
     $("div#curtain").stop();
     $("div#curtain").css("opacity", 0).css("z-index", -1);
-    $("#results").append("<li>Outcome: " + data['result'] +
+    var results = $("<li><span>Outcome: " + data['result'] +
         " You: " + data['your-attack'] +
-        " They: " + data['their-attack'] + "</li>");
+        " They: " + data['their-attack'] + "</span></li>");
+    results.css("display", "none");
+    $("#results").append(results);
+    results.children("span").addClass("highlight");
+    results.show().fadeOut(1000, function() { 
+        $(this).children("span").removeClass("highlight");
+        $(this).show() 
+    });
     window.scroll(window.scrollX, document.height);
 }
 
-$(document).ready(function() {
-    $("#commands a.play").each(function (i) {
-        $(this).click(click_handler);
-    });
+$("#commands a.play").each(function(i) {
+    $(this).click(click_handler);
 });
+
+}); // end of jQuery() block
 </script>
 </head>
 <body>
