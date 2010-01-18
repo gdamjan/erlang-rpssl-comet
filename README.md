@@ -28,7 +28,7 @@ installed in the Erlang library path, you can use the git submodule:
 Now you can compile and run Comet-RPSSL:
 
     make
-    erl -pa ebin/ -pa lib/mochiweb/ebin
+    erl -pa ebin/ -pa deps/mochiweb/ebin
     webserver:start([9999]).
 
 For a quick test without a browser, run the following commands in

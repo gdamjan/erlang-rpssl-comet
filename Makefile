@@ -13,7 +13,7 @@ ebin/%.beam: src/%.erl
 	erlc -o `dirname $@` $<
 
 mochiweb:
-	(cd lib/mochiweb && make)
+	(cd deps/mochiweb && make)
 
 clean:
 	rm -rf ebin/
