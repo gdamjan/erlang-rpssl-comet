@@ -2,8 +2,8 @@
 -export ([start/1]).
 -export ([dispatch_requests/1]).
 
-start(Args) ->
-    [Port] = Args,
+
+start(Port) ->
     io:format("Starting mochiweb on http://localhost:~p~n", [Port]),
     gameserver:start_link(),
     uuid:start_link(),
@@ -21,7 +21,7 @@ dispatch_requests(Req) ->
         _ ->
             Method = Req:get(method),
             case (catch handle(Method, Path, Req)) of
-                {'EXIT', _E} -> 
+                {'EXIT', _E} ->
                     Req:not_found();
                 Resp ->
                     Resp
