@@ -19,10 +19,11 @@ start(_Type, _StartArgs) ->
 
 getport() ->
     case init:get_argument(port) of
-        {ok, [[Val | _]]} ->
-            erlang:element(1, string:to_integer(Val));
+        {ok, Values} ->
+            [Val | _] = lists:last(Values),
+            Val;
         _ ->
-            9999
+            "9999"
     end.
 
 

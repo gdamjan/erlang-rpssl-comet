@@ -29,7 +29,7 @@ Now you can compile and run Comet-RPSSL:
 
     make
     erl -pa ebin/ -pa deps/mochiweb/ebin
-    webserver:start(9999).
+    webserver:start("9999").
 
 For a quick test without a browser, run the following commands in
 two separate terminals:

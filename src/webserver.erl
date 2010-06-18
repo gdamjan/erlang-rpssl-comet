@@ -4,7 +4,7 @@
 
 
 start(Port) ->
-    io:format("Starting mochiweb on http://localhost:~p~n", [Port]),
+    io:format("Starting mochiweb on http://localhost:~s~n", [Port]),
     gameserver:start_link(),
     uuid:start_link(),
     mochiweb_http:start([ {port, Port},
