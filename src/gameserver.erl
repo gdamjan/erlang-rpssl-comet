@@ -30,7 +30,7 @@ handle_call({join, _Name, _GameUUID}, _From, State) ->
     {noreply, State};
 
 handle_call({play, GameUUID, Attack}, From, State) ->
-    io:format("play: ~p ~p~n", [GameUUID, Attack]),
+    error_logger:info_msg("play: ~p ~p~n", [GameUUID, Attack]),
 
     case dict:is_key(GameUUID, State) of
         % first player attacks, don't reply just save his hand
