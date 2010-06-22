@@ -9,7 +9,7 @@ main: ebin/ ${ERL_OBJ}
 ebin/:
 	@mkdir -p ebin
 
-ebin/%.app: src/%.app
+ebin/%.app: src/%.app.src
 	cp $< $@
 
 ebin/%.beam: src/%.erl
