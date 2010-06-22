@@ -39,7 +39,7 @@ handle_call({play, GameUUID, Attack}, From, State) ->
         % second player attacks, play the game, reply to both
         true ->
             {OtherFrom, OtherAttack} = dict:fetch(GameUUID, State),
-            {R1, R2} = rpssl:play(OtherAttack, Attack),
+            {R1, R2} = rpssl_game:play(OtherAttack, Attack),
             gen_server:reply(OtherFrom, {R1, GameUUID, OtherAttack, Attack}),
             Result = {R2, GameUUID, Attack, OtherAttack},
             {reply, Result, dict:erase(GameUUID, State)}
