@@ -1,4 +1,4 @@
--module(rpssl_app).
+-module(rpssl).
 -author('gdamjan@gmail.com').
 
 -behaviour(application).

@@ -2,8 +2,8 @@
     {description, "rpssl"},
     {vsn, "0.01"},
     {modules, [
-        rpssl_app, webserver, gameserver, rpssl_game, uuid
+        rpssl, webserver, gameserver, rpssl_game, uuid
     ]},
-    {mod, {rpssl_app, []}},
+    {mod, {rpssl, []}},
     {applications, [kernel, stdlib]}]
 }.
