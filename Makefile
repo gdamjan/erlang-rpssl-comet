@@ -3,6 +3,9 @@
 ERL_SRC := $(wildcard src/*.erl)
 ERL_OBJ := $(patsubst src/%.erl,ebin/%.beam,${ERL_SRC})
 
+default:
+	@echo 'Use the "rebar" tool. See the README.md for directions'
+
 all: main mochiweb ebin/rpssl.app
 main: ebin/ ${ERL_OBJ}
 
