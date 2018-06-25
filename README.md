@@ -19,15 +19,13 @@ Compile
 
 This project now uses the "rebar" tool to compile and handle dependencies.
 I've decided not to bundle the tool itself in the source tree, but it's easy to
-get from the [rebar projects site][rebar] (don't forget to make it executable).
+get from the [rebar projects site][rebar3] (don't forget to make it executable).
 
-[rebar]: http://bitbucket.org/basho/rebar/downloads
+[rebar]: https://www.rebar3.org/
 
 Rebar can get the dependencies, compile everything at once and even install:
 
-    chmod +x rebar
-    ./rebar get-deps
-    ./rebar compile
+    rebar3 compile
 
 (note: the Makefile is left as an example, but doesn't need to be used)
 
@@ -38,14 +36,14 @@ Game
 
 And we are ready to start:
 
-    erl -pa ebin/ -pa deps/mochiweb/ebin
+    rebar3 shell
     webserver:start("9999").
 
 For a quick test without a browser, run the following commands in
 two separate terminals:
 
-    curl -d attack=rock http://localhost:9999/test-game/attack
-    curl -d attack=scissors http://localhost:9999/test-game/attack
+    curl -d '{"attack": "Rock"}' http://localhost:9999/test-game/attack
+    curl -d '{"attack": "Scissors"}' http://localhost:9999/test-game/attack
 
 You will notice how the first one blocks until the second one plays, and then
 both are immediately released. (test-game is the id of the game)
