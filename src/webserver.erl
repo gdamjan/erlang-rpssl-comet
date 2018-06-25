@@ -66,14 +66,13 @@ handle('POST', [Uuid, "join"], Req) ->
 %% Comet callback: play a hand and wait for the other players hand
 %% POST /<game-uuid>/attack (data: attack=rock)
 handle('POST', [Uuid, "attack"], Req) ->
-    Data = mochiweb_util:parse_qs(Req:recv_body()),
-    Attack = proplists:get_value("attack", Data),
+    {struct, [{<<"attack">>, Attack}]} = mochijson2:decode(mochiweb_request:recv_body(Req)),
     {Result, Game, Attack1, Attack2} = gameserver:play(Uuid, Attack),
     JSON = iolist_to_binary(mochijson2:encode({struct, [
-        {"result", Result},
+        {"outcome", Result},
         {"game", list_to_binary(Game)},
-        {"your-attack", list_to_binary(Attack1)},
-        {"their-attack", list_to_binary(Attack2)}
+        {"your_attack", Attack1},
+        {"their_attack", Attack2}
     ]})),
     mochiweb_request:ok({"application/javascript", JSON}, Req).
 

@@ -4,38 +4,6 @@
 <meta charset="utf-8" />
 <title>Rock-Paper-Scissors-Spock-Lizard</title>
 <link rel="stylesheet" href="../static/style.css" />
-<script type="text/javascript" src="../static/jquery.js"></script>
-<script type="text/javascript">
-jQuery(function($) { // start of jQuery() block
-
-function click_handler(ev) {
-    ev.preventDefault();
-    $("div#curtain").css("z-index", 99).fadeTo(400, 0.51);
-    $.post("attack", {'attack': $(this).attr("id")}, got_result, "json");
-}
-
-function got_result(data) {
-    $("div#curtain").stop();
-    $("div#curtain").css("opacity", 0).css("z-index", -1);
-    var results = $("<li><span>Outcome: " + data['result'] +
-        " You: " + data['your-attack'] +
-        " They: " + data['their-attack'] + "</span></li>");
-    results.css("display", "none");
-    $("#results").append(results);
-    results.children("span").addClass("highlight");
-    results.show().fadeOut(1000, function() { 
-        $(this).children("span").removeClass("highlight");
-        $(this).show() 
-    });
-    window.scroll(window.scrollX, document.height);
-}
-
-$("#commands a.play").each(function(i) {
-    $(this).click(click_handler);
-});
-
-}); // end of jQuery() block
-</script>
 </head>
 <body>
 <div id=curtain></div>
@@ -44,14 +12,14 @@ $("#commands a.play").each(function(i) {
  crushes Lizard poisons Spock smashes Scissors
  decapitates Lizard eats Paper disproves Spock
  vaporizes Rock crushes Scissors</span>
- <div id=command_bar>
+ <div id=command_bar style="text-align: center">
   <div id=commands>
   Play:
-  <a href="" class=play id=rock>rock</a>
-  <a href="" class=play id=paper>paper</a>
-  <a href="" class=play id=scissors>scissors</a>
-  <a href="" class=play id=spock>spock</a>
-  <a href="" class=play id=lizard>lizard</a>
+  <button onclick="play('Rock')" class=play>rock</button>
+  <button onclick="play('Paper')" class=play>paper</button>
+  <button onclick="play('Scissors')" class=play>scissors</button>
+  <button onclick="play('Spock')" class=play>spock</button>
+  <button onclick="play('Lizard')" class=play>lizard</button>
   </div>
  </div>
 </div>
@@ -59,10 +27,48 @@ $("#commands a.play").each(function(i) {
  <h1>Rock-Paper-Scissors-Spock-Lizard</h1>
  Copy the url of this <a href="">page</a> and send it to a friend!
  <ol id=results></ol>
- <div id="footer-spacer"></div>   
+ <div id="footer-spacer"></div>
 </div>
 <div id="footer">
  <a href="http://github.com/gdamjan/erlang-rpssl-comet">http://github.com/gdamjan/erlang-rpssl-comet</a>
 </div>
+<script>
+function curtain_on() {
+    var curtain = document.querySelector("div#curtain");
+    curtain.style.zIndex = 99;
+    curtain.style.opacity = 0.5;
+}
+function curtain_off() {
+    var curtain = document.querySelector("div#curtain");
+    curtain.style.zIndex = -1;
+    curtain.style.opacity = 0;
+}
+
+function play(attack) {
+    curtain_on();
+
+    var data = {'attack': attack};
+    fetch('attack', {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers:{'Content-Type': 'application/json'}
+    })
+    .then(response => response.json())
+    .then(result => got_result(result))
+    .finally(_=> {
+        curtain_off();
+        window.scroll(window.scrollX, document.height);
+    });
+}
+
+function got_result(data) {
+    var results = document.querySelector("ol#results");
+    var li = document.createElement("li");
+    var span = document.createElement("span");
+    span.textContent = `Outcome: ${data.outcome} You: ${data.your_attack} They: ${data.their_attack}`;
+    li.appendChild(span);
+    results.appendChild(li);
+}
+</script>
 </body>
 </html>
